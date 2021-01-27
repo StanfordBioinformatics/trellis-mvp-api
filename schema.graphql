@@ -1,0 +1,595 @@
+type Blob {
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+}
+
+### Sequencing & variant calling data types
+type PersonalisSequencing {
+    ProtocolId: String
+    DataQcCode: String
+    Gender: String
+    SampleQcCode: String
+    RequestId: String
+    SampleConcordance: String
+    PlateCoord: String
+    PredictedGender: String
+    CellId: String
+    RunDate: String
+    Volume: String
+    OD260_280: String
+    ReceiptCode: String
+    BloodType: String
+    ShippingId: String
+    DataQcDate: String
+    AlignmentCoverage: String
+    SampleQcDate: String
+    Ethnicity: String
+    AssayType: String
+    ReceiptDate: String
+    Contamination: String
+    
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    labels: [String]
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+
+    generated: [Blob] @relation(name: "GENERATED", direction: "out")
+    generatedFastq: [Fastq] @relation(name: "GENERATED", direction: "out")
+}
+
+type Fastq {
+    sample: String!
+    readGroup: Int
+    plate: String
+    setSize: Int
+    matePair: Int
+    
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+
+    wasUsedBy: [Job] @relation(name: "WAS_USED_BY", direction: "out")
+    wasGeneratedBy: PersonalisSequencing @relation(name: "GENERATED", direction: "in")
+    sequencedOme: BiologicalOme @relation(name: "HAS_SEQUENCING_READS", direction: "in")
+}
+
+type Ubam {
+    sample: String!
+    readGroup: Int
+    trellisTask: String
+    trellisTaskId: String
+    setSize: Float
+    
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+
+    wasUsedBy: [Job] @relation(name: "WAS_USED_BY", direction: "out")
+    wasGeneratedBy: Job @relation(name: "GENERATED", direction: "in")
+}
+
+type Cram {
+    sample: String!
+
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+    
+    hasIndex: Index @relation(name: "HAS_INDEX", direction: "out")
+    wasGeneratedBy: PersonalisSequencing @relation(name: "GENERATED", direction: "in")
+    wasUsedBy: [Job] @relation(name: "WAS_USED_BY", direction: "out")
+    sequencedOme: BiologicalOme @relation(name: "HAS_SEQUENCING_READS", direction: "in")
+}
+
+type Vcf {
+    sample: String!
+
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+    
+    wasUsedBy: [Job] @relation(name: "WAS_USED_BY", direction: "out")
+    wasGeneratedBy: PersonalisSequencing @relation(name: "GENERATED", direction: "in")
+    hasIndex: Index @relation(name: "HAS_INDEX", direction: "out")
+    characterizes: BiologicalOme @relation(name: "HAS_VARIANT_CALLS", direction: "in")
+}
+
+type Index {
+    sample: String!
+
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+    
+    indexedObject: Blob @relation(name: "HAS_INDEX", direction: "in")
+}
+
+### QC data types
+type Vcfstats {
+    trellisTask: String
+    trellisTaskId: String
+
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+
+    characterizes: BiologicalOme @relation(name: "HAS_QC_DATA", direction: "in")
+}
+
+type Fastqc {
+    trellisTask: String
+    trellisTaskId: String
+
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+
+    characterizes: BiologicalOme @relation(name: "HAS_QC_DATA", direction: "in")
+}
+
+type Data {
+}
+
+type Flagstat {
+    labels: [String!]!
+    trellisTask: String
+    trellisTaskId: String
+
+    # Inherited from Blob type
+    basename: String!
+    bucket: String!
+    crc32c: String!
+    dirname: String!
+    extension: String!
+    filetype: String!
+    id: String!
+    name: String!
+    path: String!
+    size: Int!
+    storageClass: String!
+    contentType: String!
+    kind: String!
+    timeCreated: String!
+    updated: String
+    timeStorageClassUpdated: String
+    
+    # Trellis properties
+    labels: [String!]!
+    timeCreatedEpoch: Float
+    timeUpdatedEpoch: Float
+    nodeIteration: String
+    nodeCreated: Int
+    timeCreatedIso: String
+    timeUpdatedIso: String
+    triggerOperation: String
+
+    characterizes: BiologicalOme @relation(name: "HAS_QC_DATA", direction: "in")
+}
+
+### Biological concept types
+type BiologicalOme{
+    sample: String!
+    labels: [String!]!
+    
+    hasSequencingReads: [Blob] @relation(name: "HAS_SEQUENCING_READS", direction: "out")
+    hasVariantCalls: [Vcf] @relation(name: "HAS_VARIANT_CALLS", direction: "out")
+    hasQcData: [Data] @relation(name: "HAS_QC_DATA", direction: "out")
+    ofPerson: Person @relation(name: "HAS_BIOLOGICAL_OME", direction: "in")
+}
+
+type Genome {
+    sample: String!
+    labels: [String!]!
+    
+    hasSequencingReads: [Blob] @relation(name: "HAS_SEQUENCING_READS", direction: "out")
+    hasVariantCalls: [Vcf] @relation(name: "HAS_VARIANT_CALLS", direction: "out")
+    hasQcData: [Data] @relation(name: "HAS_QC_DATA", direction: "out")
+    ofPerson: Person @relation(name: "HAS_BIOLOGICAL_OME", direction: "in")
+}
+
+type Person {
+    sample: String!
+    labels: [String!]!
+    
+    hasBiologicalOme: BiologicalOme @relation(name: "HAS_BIOLOGICAL_OME", direction: "out")
+    generated: [Sample] @relation(name: "GENERATED", direction: "out")
+}
+
+type Sample {
+    sample: String!
+    labels: [String!]!
+    trellis_snvQa: Boolean
+
+    wasGeneratedBy: Person @relation(name: "GENERATED", direction: "in")
+    wasUsedBy: PersonalisSequencing @relation(name: "WAS_USED_BY", direction: "out")
+}
+
+### Computational job types
+type Job {
+    labels: [String!]!
+    
+    startTime: String
+    startTimeEpoch: Float
+    stopTime: String
+    stopTimeEpoch: Float
+    durationMinutes: Int
+    stoppedBy: String
+    status: String
+}
+
+type GcpInstance {
+    attachedDiskSize: String
+    bootDiskSize: String
+    googPipelinesWorker: Boolean
+    instanceId: Int
+    instanceName: String
+    machineType: String
+}
+
+type Dsub {
+    labels: [String!]!
+    inputHash: String
+    inputIds: [String]
+    dstatCmd: String
+    dryRun: Boolean
+    regions: String
+    project: String
+    network: String
+    diskSize: Int
+    provider: String
+    minRam: Float
+    dsubJobId: String
+    image: String
+    minCores: Int
+    command: String
+    preemptible: Boolean
+    subnetwork: String
+    name: String
+    user: String
+    logging: String
+    
+    # Inherited from Job type
+    startTime: String
+    startTimeEpoch: Float
+    stopTime: String
+    stopTimeEpoch: Float
+    durationMinutes: Int
+    stoppedBy: String
+    status: String
+
+    status: Dstat @relation(name: "STATUS", direction: "out")
+}
+
+type Dstat {
+    labels: [String!]!
+    outputs: String
+    regions: [String]
+    instanceName: String
+    use_private_address: Boolean
+    inputs: String
+    envs: String
+    statusDetail: String
+    network: String
+    internalId: String
+    diskSize: Int
+    zone: String
+    provider: String
+    startTime: String
+    bootDiskSize: Int
+    diskType: String
+    enableStackdriverMonitoring: Boolean
+    events: [String]
+    machineType: String
+    jobName: String
+    dsubVersion: String
+    serviceAccount: String
+    userId: String
+    script: String
+    command: String
+    statusMessage: String
+    jobId: String
+    createTime: String
+    subnetwork: String
+    lastUpdate: String
+    logging: String
+    scriptName: String
+    endTime: String
+    status: String
+
+    dsub: Dsub @relation(name: "STATUS", direction: "in")
+}
+
+type CromwellWorkflow {
+    labels: [String!]!
+    timeout: String
+    env_BACKEND_PROVIDER: String
+    env_ROOT: String
+    input_INPUT: String
+    input_OPTION: String
+    input_WDL: String
+    input_SUBWDL: String
+
+    # Inherited from Dsub type
+    inputHash: String
+    inputIds: [String]
+    dstatCmd: String
+    dryRun: Boolean
+    regions: String
+    project: String
+    network: String
+    diskSize: Int
+    provider: String
+    minRam: Float
+    dsubJobId: String
+    image: String
+    minCores: Int
+    command: String
+    preemptible: Boolean
+    subnetwork: String
+    name: String
+    user: String
+    logging: String
+    
+    # Inherited from Job type
+    startTime: String
+    startTimeEpoch: Float
+    stopTime: String
+    stopTimeEpoch: Float
+    durationMinutes: Int
+    stoppedBy: String
+    status: String
+
+    generated: Blob @relation(name: "GENERATED", direction: "out")
+    used: Blob @relation(name: "WAS_USED_BY", direction: "in")
+    ledTo: CromwellStep @relation(name: "LED_TO", direction: "out")
+}
+
+type CromwellStep {
+    labels: [String!]!
+    wdlCallAlias: String
+    wdlTaskName: String
+    nodeIteration: String
+    startTimeEpoch: String
+    cromwellWorkflowId: String
+
+    generated: Blob @relation(name: "GENERATED", direction: "out")
+    ledTo: CromwellStep @relation(name: "LED_TO", direction: "out")
+    generatedAttempt: CromwellAttempt @relation(name: "GENERATED_ATTEMPT", direction: "out")
+}
+
+type CromwellAttempt {
+    labels: [String!]!
+    wdlCallAlias: String
+    wdlTaskName: String
+
+    # Inherited from Job type
+    startTime: String
+    startTimeEpoch: Float
+    stopTime: String
+    stopTimeEpoch: Float
+    durationMinutes: Int
+    stoppedBy: String
+    status: String
+
+    # Inherited from GcpInstance
+    attachedDiskSize: String
+    bootDiskSize: String
+    googPipelinesWorker: Boolean
+    instanceId: Int
+    instanceName: String
+    machineType: String
+
+    wasGeneratedBy: CromwellStep @relation(name: "GENERATED_ATTEMPT", direction: "in")
+    after: [CromwellAttempt] @relation(name: "AFTER", direction: "out")
+}
